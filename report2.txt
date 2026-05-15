@@ -1,0 +1,144 @@
+# Лабораторная работа 02
+
+## Тема
+Изучение систем контроля версий на примере Git.
+
+## Ход выполнения
+
+### 1. Настройка переменных окружения
+
+В терминале были установлены переменные окружения для автоматизации работы:
+
+```bash
+export GITHUB_USERNAME=chukchaaa
+export GITHUB_EMAIL=myпочта@gmail.com
+export GITHUB_TOKEN=<сгенерированный_токен>
+alias edit=nano
+```
+### 2. Переход в рабочую директорию
+```bash
+cd ${GITHUB_USERNAME}/workspace
+source scripts/activate
+```
+### 3. Настройка конфигурации hub
+```bash
+mkdir -p ~/.config
+cat > ~/.config/hub <<EOF
+github.com:
+- user: ${GITHUB_USERNAME}
+  oauth_token: ${GITHUB_TOKEN}
+  protocol: https
+EOF
+git config --global hub.protocol https
+```
+### 4. Создание локального репозитория
+```bash
+mkdir -p projects/lab02 && cd projects/lab02
+git init
+git config --global user.name ${GITHUB_USERNAME}
+git config --global user.email ${GITHUB_EMAIL}
+```
+При инициализации нового локального репозитория создается папка .git, которая хранит в себе все изменения
+
+### 5. Проверка настроек Git
+```bash
+git config -e --global
+```
+Убедились что настройки применились
+
+### 6. Привязка к удалённому репозиторию
+```bash
+git remote add origin https://github.com/${GITHUB_USERNAME}/lab02.git
+git pull origin main
+```
+Связываем локальный репозиторий с удаленным на GitHUb
+
+### 7. Создание README.md и первый коммит
+```bash
+touch README.md
+git status
+git add README.md
+git commit -m "added README.md"
+git push origin master:main
+```
+Ветка локально называется master, а на гитхабе main, поэтому используется синтаксис master:main
+
+### 8. Добавление .gitignore на GitHub
+Согласно инструкции, файл .gitignore был добавлен вручную через веб-интерфейс GitHub, содержание:
+```text
+*build*/
+*install*/
+*.swp
+.idea/
+
+```
+Коммитим изменение. Этот файл показывает, какие файлы и папки не нужно отслеживать
+
+### 9. Синхронизация с удалённым репозиторием
+```bash
+git pull origin master
+git log
+```
+Получили:
+```bash
+commit 37d421e62c72682bdabd94cbd12681488d3fb2ad (HEAD -> master, origin/main)
+Author: chukchaaa <subbotindmitruy@gmail.com>
+Date:   Fri May 15 04:23:13 2026 +0300
+
+    added README.md
+
+commit aabb1f0a5b83deb16751d4727af16dc9be766fcd
+Author: chukchaaa <subbotindmitruy@gmail.com>
+Date:   Fri May 15 04:21:46 2026 +0300
+
+    Initial commit
+```
+Все верно.
+
+### 10. Создание структуры проекта
+```bash
+mkdir sources include examples
+```
+### 11. Создание файлов проекта
+include/print.hpp это заголовочный файл:
+
+```cpp
+#include <fstream>
+#include <iostream>
+#include <string>
+
+void print(const std::string& text, std::ofstream& out);
+void print(const std::string& text, std::ostream& out = std::cout);
+```
+sources/print.cpp это реализация:
+
+```cpp
+#include <print.hpp>
+
+void print(const std::string& text, std::ostream& out) { out << text; }
+void print(const std::string& text, std::ofstream& out) { out << text; }
+```
+examples/example1.cpp это вывод в консоль:
+
+```cpp
+#include <print.hpp>
+
+int main() { print("hello"); }
+```
+examples/example2.cpp это вывод в файл:
+```cpp
+#include <print.hpp>
+#include <fstream>
+
+int main() {
+  std::ofstream file("log.txt");
+  print("hello", file);
+}
+```
+### 12. Финальный коммит
+```bash
+git add .
+git commit -m "added sources"
+git push origin master
+```
+
