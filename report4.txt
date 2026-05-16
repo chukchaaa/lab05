@@ -80,7 +80,3 @@ git push origin main
 gh run list
 gh run view --log
 ```
-
-## CI Status
-
-[![CI](https://github.com/chukchaaa/lab04/actions/workflows/ci.yml/badge.svg)](https://github.com/chukchaaa/lab04/actions/workflows/ci.yml)
