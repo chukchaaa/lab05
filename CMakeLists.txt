@@ -37,7 +37,6 @@ install(EXPORT print-config DESTINATION cmake)
 
 if(BUILD_TESTS)
   enable_testing()
-include(third-party/gtest/CMakeLists.txt.user)
   add_subdirectory(third-party/gtest)
   file(GLOB ${PROJECT_NAME}_TEST_SOURCES tests/*.cpp)
   add_executable(check ${${PROJECT_NAME}_TEST_SOURCES})
@@ -47,3 +46,6 @@ endif()
 if(BUILD_TESTS)
   add_compile_options(-Wno-maybe-uninitialized)
 endif()
+
+# Disable -Werror for old GTest
+add_compile_options(-Wno-error)
